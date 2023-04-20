@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,9 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 class DownloadFileJson extends StatefulWidget {
+
+
+
   const DownloadFileJson({Key? key}) : super(key: key);
 
   @override
@@ -48,11 +52,47 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
+  late StreamSubscription _streamSubscription;
+
+  static const stream = EventChannel("com.yungi.www/eventChannel");
+  double _currentValue = 0.0;
+
+
+
   bool downloading = false;
   String downloadingStr = "";
   String downloadpath = "";
 
   List _items = [];
+
+  void _startListener(){
+    _streamSubscription = stream.receiveBroadcastStream().listen(_listenStream);
+  }
+
+  void _cancelListener(){
+    _streamSubscription.cancel();
+    setState(() {
+      _currentValue = 0;
+    });
+  }
+
+  void _listenStream(value){
+    debugPrint("Received From Native :  + $value\n");
+    setState(() {
+      _currentValue = value;
+    });
+  }
+
+  // Future<String> _getOSVersion() async{
+  //   String version;
+  //   try{
+  //     version = await platform.invokeMethod("getOSVersion");
+  //   }on PlatformException catch(e){
+  //     version = e.message.toString();
+  //   }
+  //   return version;
+  // }
+
 
   Future downloadstart() async {
     try {
@@ -171,6 +211,14 @@ class _homeState extends State<home> {
                 MaterialPageRoute(builder: (context) => const ListScreen()),
               );
             }, child: Text("메인으로 이동")),
+            ElevatedButton(onPressed: (){
+              _startListener();
+             // _getOSVersion().then((value){
+             //   ScaffoldMessenger.of(context).showSnackBar(
+             //     SnackBar(content: Text(value)),
+             //   );
+             // });
+            }, child: Text("안드로이드 호출")),
             SizedBox(
               height: 20,
             ),
@@ -195,7 +243,8 @@ class _homeState extends State<home> {
             )
             : Container(
               child: Text("데이가 없다"),
-            )
+            ),
+            Text(_currentValue.toString()),
           ],
         ),
       ),
