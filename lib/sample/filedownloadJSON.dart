@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../list_screen.dart';
+import '../main.dart';
+import '../todo.dart';
 import 'ProductDataModel.dart';
 
 void main() {
@@ -54,7 +57,7 @@ class _homeState extends State<home> {
   Future downloadstart() async {
     try {
       Dio dio = Dio();
-      String url = "https://exhibit.gallery360.co/load_VRRoom_rental_public.mon?sort=1&ty=all&artist=&q=&q_cond=all&perpage=15&page=1&start=0&_=1681978034178";
+      String url = "https://exhibit.gallery360.co/load_VRRoom_rental_public.mon?sort=1&ty=all&artist=&q=&q_cond=all&perpage=150&page=1&start=0&_=1681978034178";
     //  String filename = await DefaultAssetBundle.of(context).loadString('assets/file/country.json');
       String filename = "111.json";
       downloadpath = await getFilePath(filename);
@@ -100,7 +103,7 @@ class _homeState extends State<home> {
       final content = await file.readAsString();
       final data = await json.decode(content);
 
-      print(data);
+      //print(data);
 
       // var data = await rootBundle.loadString('assets/database/bcs-preparation.json'); this is working when when the file is inside assets
       //var jsonData = await json.decode(data);
@@ -114,6 +117,18 @@ class _homeState extends State<home> {
       // final dpath = await File(downloadpath);
       // final data = await json.decode(dpath.readAsString().toString());
       //print(data);
+      _items = data['list'];
+      print(_items.length);
+      for (Map<String, dynamic> doc in _items){
+        print(doc['open_homepage']);
+
+        await todos.add(Todo(
+          title: doc['title'],
+          dateTime: DateTime.now().millisecondsSinceEpoch,
+        ));
+      }
+
+
 
       setState(() {
         _items = data['list'];
@@ -150,6 +165,12 @@ class _homeState extends State<home> {
             ElevatedButton(onPressed: (){
               jsonP();
             }, child: Text("JSON 불러오기")),
+            ElevatedButton(onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ListScreen()),
+              );
+            }, child: Text("메인으로 이동")),
             SizedBox(
               height: 20,
             ),
