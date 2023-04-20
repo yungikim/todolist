@@ -31,7 +31,7 @@ class _DownloadFileState extends State<DownloadFile> {
 
   bool downloading = true;
   String savePath = "";
-  var imageUrl = "https://www.gallery360.co.kr/artimage/kimjiyoun72@naver.com/art/watermark/kimjiyoun72@naver.com_b8a1d8f684a9dcd8d28a995eb37adb39.7021844.jpg";
+  var imageUrl = "https://www.gallery360.co.kr/artimage/byhokim68@naver.com/art/watermark/byhokim68@naver.com_b638703d6a1774f15b286ffd5a9471d8.22101052.jpg";
   String downloadingStr = "No Data";
 
   @override
@@ -44,6 +44,7 @@ class _DownloadFileState extends State<DownloadFile> {
     try{
       Dio dio = Dio();
       String filename = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+      filename = "111.jpg";
       savePath = await getFilePath(filename);
       print(savePath);
       await dio.download(imageUrl, savePath, onReceiveProgress: (rec, total){
@@ -54,6 +55,7 @@ class _DownloadFileState extends State<DownloadFile> {
       });
 
       setState(() {
+        print("downloading Complete................");
         downloading = false;
         downloadingStr = "Completed";
       });
@@ -103,11 +105,10 @@ class _DownloadFileState extends State<DownloadFile> {
                 ),
               )
               :Container(
-                height: 250,
-                width: 250,
+
                 child: Center(
                   child: Center(
-                    child: Image.file(File(savePath), height: 200,),
+                    child: Image.file(File(savePath), ),
                   ),
                 ),
               ),

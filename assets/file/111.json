@@ -1,0 +1,24 @@
+{
+  "lending" : [
+    {
+      "lending_name": "갤러리360 기업홍보관",
+      "organizer_name": "갤러리360(주)",
+      "image": "1"
+    },
+    {
+      "lending_name": "let there be light - 유승호 개인전",
+      "organizer_name": "Art Director Yun",
+      "image": "2"
+    },
+    {
+      "lending_name": "제6회 모꼬지 전국대학 졸업작품 콘테스트 수상작 전시",
+      "organizer_name": "갤러리360X더콘테스트",
+      "image": "3"
+    },
+    {
+      "lending_name": "2022 방송광고페스티벌",
+      "organizer_name": "MTN",
+      "image": "4"
+    }
+  ]
+}

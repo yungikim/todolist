@@ -2,15 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:todolist/list_screen.dart';
+import 'package:todolist/sample/filedownloadJSON.dart';
 import 'package:todolist/todo.dart';
+import 'dart:io';
 
 late final Box<Todo> todos;
 
 void main() async{
+  HttpOverrides.global = MyHttpOverrides();
   await Hive.initFlutter();
   Hive.registerAdapter(TodoAdapter());
   todos = await Hive.openBox<Todo>('todolist.db');
   runApp(const MyApp());
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +37,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ListScreen(),
+      //home: const ListScreen(),
+      home: const DownloadFileJson(),
     );
   }
 }
